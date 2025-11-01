@@ -24,6 +24,7 @@
             --warning: #ff9500;
             --progress-bg: #2c2c2e;
             --progress-fill: #34c759;
+            --owner: #ffd60a;
         }
 
         * {
@@ -57,7 +58,6 @@
             --progress-bg: #e5e5ea;
         }
 
-        /* Landscape Layout */
         .app-container {
             display: flex;
             flex-direction: row;
@@ -86,6 +86,7 @@
             text-align: center;
             padding: 12px 0;
             border-bottom: 1px solid var(--border);
+            position: relative;
         }
 
         .logo h1 {
@@ -98,6 +99,33 @@
             font-size: 12px;
             color: var(--text-muted);
             margin-top: 4px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--card-hover);
+            margin: 12px auto 8px;
+            cursor: pointer;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            transition: all 0.2s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            width: 64px;
+            height: 64px;
+            cursor: pointer;
         }
 
         .nav-item {
@@ -190,12 +218,28 @@
             gap: 8px;
         }
 
-        .chat-controls {
+        .room-info {
             display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .chat-controls button {
+        .owner-badge {
+            background: var(--owner);
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chat-controls button, .chat-controls input {
             padding: 8px 12px;
             border: none;
             border-radius: 8px;
@@ -205,14 +249,10 @@
 
         .public-btn { background: var(--success); color: white; }
         .private-btn { background: var(--warning); color: white; }
-
         .room-input {
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
             background: var(--bg);
             color: var(--text);
-            font-size: 12px;
+            border: 1px solid var(--border);
             width: 100px;
         }
 
@@ -223,7 +263,7 @@
             background: var(--bg);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .chat-input {
@@ -259,10 +299,15 @@
             font-size: 14px;
             line-height: 1.4;
             word-wrap: break-word;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
         }
 
         .message.own {
             align-self: flex-end;
+            flex-direction: row-reverse;
             background: var(--primary);
             color: white;
             border-bottom-right-radius: 4px;
@@ -281,6 +326,20 @@
             color: var(--text-muted);
             font-size: 12px;
             font-style: italic;
+            padding: 4px 0;
+            text-align: center;
+        }
+
+        .message .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .message .content {
+            flex: 1;
         }
 
         .message .user {
@@ -291,59 +350,126 @@
             margin-bottom: 2px;
         }
 
-        /* Voice Chat */
-        .voice-chat {
+        .message .timestamp {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .message .actions {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .message:hover .actions {
+            opacity: 1;
+        }
+
+        .message .actions button {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        /* Voice Section */
+        .voice-section {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            height: 100%;
+            grid-column: span 2;
+        }
+
+        .voice-header {
             padding: 16px;
             background: var(--card);
-            border-radius: 12px;
-            margin-top: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voice-users {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg);
+        }
+
+        .voice-user {
+            background: var(--card-hover);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .voice-user .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .voice-user.muted i { color: var(--danger); }
+        .voice-user.owner { border: 2px solid var(--owner); }
+
+        .voice-user .actions {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--card);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+
+        .voice-user:hover .actions {
+            opacity: 1;
         }
 
         .voice-controls {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            padding: 16px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
         }
 
         .voice-controls button {
-            padding: 8px 16px;
+            padding: 10px 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 600;
         }
 
         .call-btn { background: var(--success); color: white; }
         .end-btn { background: var(--danger); color: white; }
-        .join-btn { background: var(--primary); color: white; }
-
-        .voice-users {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .voice-user {
-            background: var(--card-hover);
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .voice-user.muted { opacity: 0.5; }
 
         video {
             width: 100%;
             max-width: 300px;
             border-radius: 8px;
             background: #000;
+            margin: 8px 0;
         }
 
         /* Main Content */
@@ -395,7 +521,6 @@
             gap: 24px;
         }
 
-        /* Responsive */
         @media (max-width: 1200px) {
             .content-area {
                 grid-template-columns: 1fr;
@@ -432,8 +557,10 @@
         <div class="sidebar">
             <div class="logo">
                 <h1>GT Mod Manager</h1>
-                <p>PixelModz • v2.7</p>
-                <div id="userInfo" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Guest</div>
+                <p>PixelModz • v3.0</p>
+                <img id="userAvatar" class="avatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiMyQzJDMkUiLz4KPHBhdGggZD0iTTMyIDM2QzM3LjUyMjUgMzYgNDIgMzEuNTIyNSA0MiAyNiIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" alt="Avatar">
+                <input type="file" id="avatarInput" class="avatar-upload" accept="image/*" onchange="uploadAvatar(event)">
+                <div id="userInfo" style="font-size: 12px; color: var(--text-muted);">Guest</div>
             </div>
             <button class="nav-item active" onclick="showSection('local')">
                 <i class="fas fa-folder"></i> Local Mods
@@ -463,7 +590,7 @@
             </div>
             <div style="flex: 1;"></div>
             <div class="fun-fact">
-                Fun Fact: Public & private chat + voice rooms – now with real users!
+                Fun Fact: Now with avatars, timestamps, and room owner powers!
             </div>
         </div>
 
@@ -480,53 +607,47 @@
 
             <div class="content-area" id="contentArea">
                 <!-- Text Chat -->
-                <div id="chatSection" style="display: none;">
-                    <div class="chat-section">
-                        <div class="chat-header">
-                            <div>
-                                <h3 id="chatRoomName">Public Chat</h3>
-                                <span id="onlineUsers">0 online</span>
-                            </div>
-                            <div class="chat-controls">
-                                <button class="public-btn" onclick="joinRoom('public')">Public</button>
-                                <button class="private-btn" onclick="createPrivateRoom()">Private</button>
-                                <input type="text" class="room-input" id="roomCode" placeholder="Room code" style="display: none;">
-                                <button onclick="joinPrivateRoom()" style="display: none;">Join</button>
-                            </div>
+                <div id="chatSection" class="chat-section" style="display: none;">
+                    <div class="chat-header">
+                        <div class="room-info">
+                            <h3 id="chatRoomName">Public Chat</h3>
+                            <span id="onlineUsers">0 online</span>
                         </div>
-                        <div class="chat-messages" id="chatMessages"></div>
-                        <div class="chat-input">
-                            <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                            <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                        <div class="chat-controls">
+                            <button class="public-btn" onclick="joinRoom('public', true)">Public</button>
+                            <button class="private-btn" onclick="createPrivateRoom()">Create Private</button>
+                            <input type="text" class="room-input" id="roomCode" placeholder="Room code" style="display: none;">
+                            <button onclick="joinPrivateRoom()" style="display: none;">Join</button>
                         </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                        <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
 
                 <!-- Voice Rooms -->
-                <div id="voiceSection" style="display: none;">
-                    <div class="chat-section">
-                        <div class="chat-header">
-                            <div>
-                                <h3 id="voiceRoomName">Voice Lobby</h3>
-                                <span id="voiceUsersCount">1 in room</span>
-                            </div>
-                            <div class="chat-controls">
-                                <button class="public-btn" onclick="joinVoiceRoom('public')">Public</button>
-                                <button class="private-btn" onclick="createVoiceRoom()">Private</button>
-                                <input type="text" class="room-input" id="voiceRoomCode" placeholder="Room code" style="display: none;">
-                                <button onclick="joinVoiceRoomByCode()" style="display: none;">Join</button>
-                            </div>
+                <div id="voiceSection" class="voice-section" style="display: none;">
+                    <div class="voice-header">
+                        <div class="room-info">
+                            <h3 id="voiceRoomName">Voice Lobby</h3>
+                            <span id="voiceUsersCount">1 in room</span>
                         </div>
-                        <div class="voice-chat">
-                            <div class="voice-users" id="voiceUsers"></div>
-                            <div class="voice-controls">
-                                <button class="call-btn" id="micBtn" onclick="toggleMic()">Mute</button>
-                                <button class="end-btn" onclick="leaveVoiceRoom()">Leave Room</button>
-                            </div>
-                            <video id="localVideo" autoplay muted style="display: none;"></video>
-                            <div id="remoteVideos"></div>
+                        <div class="chat-controls">
+                            <button class="public-btn" onclick="joinVoiceRoom('lobby', true)">Public</button>
+                            <button class="private-btn" onclick="createVoiceRoom()">Create Private</button>
+                            <input type="text" class="room-input" id="voiceRoomCode" placeholder="Room code" style="display: none;">
+                            <button onclick="joinVoiceRoomByCode()" style="display: none;">Join</button>
                         </div>
                     </div>
+                    <div class="voice-users" id="voiceUsers"></div>
+                    <div class="voice-controls">
+                        <button class="call-btn" id="micBtn" onclick="toggleMic()">Mute</button>
+                        <button class="end-btn" onclick="leaveVoiceRoom()">Leave Room</button>
+                    </div>
+                    <video id="localVideo" autoplay muted style="display: none;"></video>
+                    <div id="remoteVideos"></div>
                 </div>
 
                 <!-- Local Mods, APK, Library, Instructions (same as before) -->
@@ -543,16 +664,20 @@
     <script>
         // === AUTH & USER ===
         let currentUser = localStorage.getItem('pixelmodzUser') || null;
+        let userAvatar = localStorage.getItem('pixelmodzAvatar') || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiMyQzJDMkUiLz4KPHBhdGggZD0iTTMyIDM2QzM3LjUyMjUgMzYgNDIgMzEuNTIyNSA0MiAyNiIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K';
         let isSignup = false;
         const authModal = document.getElementById('authModal');
         const authTitle = document.getElementById('authTitle');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const userInfo = document.getElementById('userInfo');
+        const userAvatarEl = document.getElementById('userAvatar');
 
         // === CHAT SYSTEM ===
         let currentChatRoom = 'public';
         let chatChannel = null;
+        let roomOwner = null;
+        let roomMembers = new Set();
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
         const chatRoomName = document.getElementById('chatRoomName');
@@ -562,7 +687,8 @@
         let peer = null;
         let localStream = null;
         let currentVoiceRoom = 'lobby';
-        let voicePeers = {};
+        let voiceRoomOwner = null;
+        let voiceMembers = new Map();
         const localVideo = document.getElementById('localVideo');
         const remoteVideos = document.getElementById('remoteVideos');
         const voiceRoomName = document.getElementById('voiceRoomName');
@@ -579,9 +705,10 @@
 
         function initUser() {
             userInfo.textContent = `Logged in as ${currentUser}`;
+            userAvatarEl.src = userAvatar;
             initPeer();
-            joinRoom('public');
-            joinVoiceRoom('lobby');
+            joinRoom('public', true);
+            joinVoiceRoom('lobby', true);
             authModal.style.display = 'none';
         }
 
@@ -608,46 +735,131 @@
             initUser();
         }
 
+        // === AVATAR UPLOAD ===
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                userAvatar = e.target.result;
+                localStorage.setItem('pixelmodzAvatar', userAvatar);
+                userAvatarEl.src = userAvatar;
+                broadcastAvatar();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function broadcastAvatar() {
+            if (chatChannel) {
+                chatChannel.postMessage(JSON.stringify({
+                    type: 'avatar',
+                    user: currentUser,
+                    avatar: userAvatar
+                }));
+            }
+        }
+
         // === TEXT CHAT ===
-        function joinRoom(room) {
+        function joinRoom(room, isPublic = false) {
             if (chatChannel) chatChannel.close();
             currentChatRoom = room;
-            chatRoomName.textContent = room === 'public' ? 'Public Chat' : `Private: ${room}`;
+            roomOwner = isPublic ? null : currentUser;
+            roomMembers = new Set([currentUser]);
+            chatRoomName.innerHTML = `${room === 'public' ? 'Public Chat' : `Private: ${room}`} ${roomOwner === currentUser ? '<span class="owner-badge">OWNER</span>' : ''}`;
             chatMessages.innerHTML = '';
             addSystemMessage(`Joined ${room === 'public' ? 'public' : 'private'} room: ${room}`);
+            if (roomOwner === currentUser) addSystemMessage('You are the room owner. Use actions to kick/ban.');
             chatChannel = new BroadcastChannel(`pixelmodz_chat_${room}`);
             chatChannel.onmessage = handleChatMessage;
             requestOnlineCount();
+            broadcastJoin();
         }
 
         function createPrivateRoom() {
-            const code = prompt('Enter private room code (share with friends):');
-            if (code) joinRoom(code);
+            const code = prompt('Enter private room code (share with friends):') || `room_${Date.now()}`;
+            joinRoom(code, false);
         }
 
         function joinPrivateRoom() {
             const code = document.getElementById('roomCode').value.trim();
-            if (code) joinRoom(code);
+            if (code) joinRoom(code, false);
+        }
+
+        function broadcastJoin() {
+            chatChannel.postMessage(JSON.stringify({
+                type: 'join',
+                user: currentUser,
+                avatar: userAvatar
+            }));
         }
 
         function sendChatMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
-            const msg = { user: currentUser, text, room: currentChatRoom, timestamp: Date.now() };
+            const msg = {
+                type: 'message',
+                user: currentUser,
+                text,
+                room: currentChatRoom,
+                timestamp: Date.now(),
+                avatar: userAvatar
+            };
             chatChannel.postMessage(JSON.stringify(msg));
             chatInput.value = '';
         }
 
         function handleChatMessage(e) {
-            const msg = JSON.parse(e.data);
-            if (msg.room !== currentChatRoom) return;
-            addChatMessage(msg.user, msg.text);
+            const data = JSON.parse(e.data);
+            if (data.room && data.room !== currentChatRoom) return;
+
+            switch (data.type) {
+                case 'join':
+                    roomMembers.add(data.user);
+                    addSystemMessage(`${data.user} joined the room`);
+                    updateUserList();
+                    break;
+                case 'leave':
+                    roomMembers.delete(data.user);
+                    addSystemMessage(`${data.user} left the room`);
+                    updateUserList();
+                    break;
+                case 'message':
+                    addChatMessage(data.user, data.text, data.timestamp, data.avatar);
+                    break;
+                case 'kick':
+                    if (data.target === currentUser) {
+                        alert(`You were kicked from ${currentChatRoom}`);
+                        joinRoom('public', true);
+                    }
+                    break;
+                case 'ban':
+                    if (data.target === currentUser) {
+                        alert(`You were banned from ${currentChatRoom}`);
+                        joinRoom('public', true);
+                    }
+                    break;
+                case 'avatar':
+                    // Update avatar in memory
+                    break;
+            }
         }
 
-        function addChatMessage(user, text) {
+        function addChatMessage(user, text, timestamp, avatar) {
             const div = document.createElement('div');
             div.className = `message ${user === currentUser ? 'own' : 'other'}`;
-            div.innerHTML = `<span class="user">${user}</span>${text}`;
+            const time = new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            div.innerHTML = `
+                <img src="${avatar}" class="avatar">
+                <div class="content">
+                    <span class="user">${user} ${roomOwner === user ? '<span class="owner-badge">OWNER</span>' : ''}</span>
+                    ${text}
+                    <div class="timestamp">${time}</div>
+                </div>
+                ${roomOwner === currentUser && user !== currentUser ? `
+                <div class="actions">
+                    <button onclick="kickUser('${user}')"><i class="fas fa-user-slash"></i></button>
+                </div>` : ''}
+            `;
             chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -660,24 +872,37 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function requestOnlineCount() {
-            // Simulate with random
-            onlineUsers.textContent = `${Math.floor(Math.random() * 15) + 3} online`;
+        function kickUser(user) {
+            if (roomOwner !== currentUser) return;
+            chatChannel.postMessage(JSON.stringify({
+                type: 'kick',
+                target: user
+            }));
+            roomMembers.delete(user);
+            addSystemMessage(`${user} was kicked`);
+            updateUserList();
         }
 
-        // === VOICE CHAT ===
+        function updateUserList() {
+            onlineUsers.textContent = `${roomMembers.size} online`;
+        }
+
+        function requestOnlineCount() {
+            onlineUsers.textContent = `${roomMembers.size} online`;
+        }
+
+        // === VOICE ROOMS ===
         function initPeer() {
             peer = new Peer(`${currentUser}_${Date.now()}`, { host: 'peerjs.com', port: 443, path: '/peerjs' });
-            peer.on('open', id => {
-                console.log('Peer ID:', id);
-            });
+            peer.on('open', id => console.log('Peer ID:', id));
         }
 
-        async function joinVoiceRoom(room) {
+        async function joinVoiceRoom(room, isPublic = false) {
             leaveVoiceRoom();
             currentVoiceRoom = room;
-            voiceRoomName.textContent = room === 'lobby' ? 'Voice Lobby' : `Voice: ${room}`;
-            addSystemMessage(`Joined voice room: ${room}`);
+            voiceRoomOwner = isPublic ? null : currentUser;
+            voiceMembers.set(currentUser, { avatar: userAvatar, muted: false });
+            voiceRoomName.innerHTML = `${room === 'lobby' ? 'Voice Lobby' : `Voice: ${room}`} ${voiceRoomOwner === currentUser ? '<span class="owner-badge">OWNER</span>' : ''}`;
             try {
                 localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 localVideo.srcObject = localStream;
@@ -689,13 +914,13 @@
         }
 
         function createVoiceRoom() {
-            const code = prompt('Enter voice room code:');
-            if (code) joinVoiceRoom(code);
+            const code = prompt('Enter voice room code:') || `vroom_${Date.now()}`;
+            joinVoiceRoom(code, false);
         }
 
         function joinVoiceRoomByCode() {
             const code = document.getElementById('voiceRoomCode').value.trim();
-            if (code) joinVoiceRoom(code);
+            if (code) joinVoiceRoom(code, false);
         }
 
         function leaveVoiceRoom() {
@@ -703,6 +928,7 @@
             voicePeers = {};
             if (localStream) localStream.getTracks().forEach(t => t.stop());
             remoteVideos.innerHTML = '';
+            voiceMembers.clear();
             updateVoiceUsers();
         }
 
@@ -711,22 +937,42 @@
                 micMuted = !micMuted;
                 localStream.getAudioTracks()[0].enabled = !micMuted;
                 document.getElementById('micBtn').textContent = micMuted ? 'Unmute' : 'Mute';
+                voiceMembers.get(currentUser).muted = micMuted;
+                updateVoiceUsers();
             }
         }
 
         function updateVoiceUsers() {
             voiceUsers.innerHTML = '';
-            const user = document.createElement('div');
-            user.className = `voice-user ${micMuted ? 'muted' : ''}`;
-            user.innerHTML = `<i class="fas fa-microphone${micMuted ? '-slash' : ''}"></i> ${currentUser} (You)`;
-            voiceUsers.appendChild(user);
-            voiceUsersCount.textContent = `${Object.keys(voicePeers).length + 1} in room`;
+            voiceMembers.forEach((info, user) => {
+                const div = document.createElement('div');
+                div.className = `voice-user ${info.muted ? 'muted' : ''} ${voiceRoomOwner === user ? 'owner' : ''}`;
+                div.innerHTML = `
+                    <img src="${info.avatar}" class="avatar">
+                    <span>${user} ${voiceRoomOwner === user ? '<span class="owner-badge">OWNER</span>' : ''}</span>
+                    <i class="fas fa-microphone${info.muted ? '-slash' : ''}"></i>
+                    ${voiceRoomOwner === currentUser && user !== currentUser ? `
+                    <div class="actions" onclick="kickVoiceUser('${user}')">
+                        <i class="fas fa-user-slash"></i>
+                    </div>` : ''}
+                `;
+                voiceUsers.appendChild(div);
+            });
+            voiceUsersCount.textContent = `${voiceMembers.size} in room`;
+        }
+
+        function kickVoiceUser(user) {
+            if (voiceRoomOwner !== currentUser) return;
+            alert(`${user} kicked from voice room`);
+            voiceMembers.delete(user);
+            updateVoiceUsers();
         }
 
         // === SECTION SWITCHING ===
         function showSection(section) {
             document.querySelectorAll('.content-area > div').forEach(el => el.style.display = 'none');
-            document.getElementById(section + 'Section').style.display = section === 'chat' || section === 'voice' ? 'block' : 'grid';
+            const el = document.getElementById(section + 'Section');
+            el.style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('sectionTitle').textContent = {
@@ -741,7 +987,6 @@
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
 
-        // Load theme
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
     </script>
 </body>
